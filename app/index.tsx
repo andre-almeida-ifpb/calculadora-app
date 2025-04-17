@@ -14,55 +14,69 @@ export default function Index(): JSX.Element {
   const [op, setOp] = useState<string | undefined>(undefined);
 
   function inserirNumero(digito: number): void {
-    if (op == undefined) {
-      if (n1 == undefined) {
+    if (op === undefined) {
+      if (n1 === undefined) {
         setN1(digito.toString());
       } else {
         setN1(n1 + digito.toString());
       }
-      
     } else {
-      if (n2 == undefined) {
+      if (n2 === undefined) {
         setN2(digito.toString());
       } else {
         setN2(n2 + digito.toString());
       }
-      
     }
     setVisor(visor + digito.toString());
   }
 
-  function definirOperador(op: string): void {
-    if (n1 != undefined) {
-      setOp(op);
-      setVisor(visor + op);
+  function definirOperador(operador: string): void {
+    const lastChar = visor.slice(-1);
+    const isLastOperator = /[+\-*/^]$/.test(lastChar);
+
+    if (operador === "-") {
+      if (visor === "" || isLastOperator) {
+        if (op === undefined) {
+          setN1((n1 || "") + "-");
+        } else {
+          setN2((n2 || "") + "-");
+        }
+        setVisor(visor + "-");
+        return;
+      }
+    }
+
+    if (!isLastOperator && n1 !== undefined) {
+      setOp(operador);
+      setVisor(visor + operador);
     }
   }
 
   function calcular(): void {
-    if (n2 != undefined) {
-
-      if (op == '/' && n2 == '0') {
-        Alert.alert('Não é possível dividir por zero!');
+    if (n2 !== undefined) {
+      if (op === "/" && n2 === "0") {
+        Alert.alert("Não é possível dividir por zero!");
         return;
       }
 
-      let resultado = undefined;
+      let resultado: number | undefined;
+      const num1 = Number(n1);
+      const num2 = Number(n2);
 
-      if (op == '+') {
-        resultado = Number(n1) + Number(n2);
-      } else if (op == '-') {
-        resultado = Number(n1) - Number(n2);
-      } else if (op == '*') {
-        resultado = Number(n1) * Number(n2);
-      } else if (op == '/') {
-        resultado = Number(n1) / Number(n2);
-      } else {
-        resultado = Number(n1) ** Number(n2);
+      if (op === "+") {
+        resultado = num1 + num2;
+      } else if (op === "-") {
+        resultado = num1 - num2;
+      } else if (op === "*") {
+        resultado = num1 * num2;
+      } else if (op === "/") {
+        resultado = num1 / num2;
+      } else if (op === "^") {
+        resultado = num1 ** num2;
       }
 
-      setVisor( resultado.toString() );
-      setN1(resultado.toString());
+      setVisor(resultado ? resultado.toString() : "Error");
+      setN1(resultado ? resultado.toString() : "");
       setN2(undefined);
       setOp(undefined);
     }
@@ -72,32 +86,27 @@ export default function Index(): JSX.Element {
     setN1(undefined);
     setN2(undefined);
     setOp(undefined);
-    setVisor('');
+    setVisor("");
   }
 
   function removerUltimo(): void {
-
-    if (n1 != undefined) {
-    
-      if (n2 != undefined) {
-        if (n2.length == 1) {
-          setN2(undefined)
+    if (n1 !== undefined) {
+      if (n2 !== undefined) {
+        if (n2.length === 1) {
+          setN2(undefined);
         } else {
-          setN2(n2.substring(0, n2.length-1));
+          setN2(n2.substring(0, n2.length - 1));
         }
-
-      } else if (op != undefined) {
+      } else if (op !== undefined) {
         setOp(undefined);
-        
       } else {
-        if (n1.length == 1) {
-          setN1(undefined)
+        if (n1.length === 1) {
+          setN1(undefined);
         } else {
-          setN1(n1.substring(0, n1.length-1));
+          setN1(n1.substring(0, n1.length - 1));
         }
       }
-
-      setVisor(visor.substring(0,visor.length-1));
+      setVisor(visor.slice(0, -1));
     }
   }
 
@@ -115,7 +124,7 @@ export default function Index(): JSX.Element {
       }
     }
   }
-
+  
   return (
     <View style={ styles.container }>
       <StatusBar hidden />
