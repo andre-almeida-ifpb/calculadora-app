@@ -124,7 +124,7 @@ export default function Index(): JSX.Element {
     <View style={ styles.container }>
       <StatusBar hidden />
       <View style={ [ styles.display, { width: largura - 20 } ] }>
-        <Text style={ styles.texto }>{visor}</Text>
+        <Text style={ styles.texto } numberOfLines={1} ellipsizeMode="middle">{visor}</Text>
       </View>
       <View style={{ width: largura, height: altura }}>
         <View style={{ height: altura/5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
