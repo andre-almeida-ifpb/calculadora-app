@@ -4,6 +4,8 @@ import { StatusBar } from "expo-status-bar";
 import {useWindowDimensions} from 'react-native';
 import BotaoArredondado from "@/componentes/BotaoArredondado";
 
+import BigNumber from "bignumber.js";
+
 export default function Index(): JSX.Element {
   const largura: number = useWindowDimensions().width;
   const altura: number = (largura/4) * 5;
@@ -40,7 +42,7 @@ export default function Index(): JSX.Element {
   }
 
   function calcular(): void {
-    if (n2 != undefined) {
+    if (n1 != undefined && n2 != undefined) {
 
       if (op == '/' && n2 == '0') {
         Alert.alert('Não é possível dividir por zero!');
@@ -48,17 +50,19 @@ export default function Index(): JSX.Element {
       }
 
       let resultado = undefined;
+      const bigNumber1 = new BigNumber(n1);
+      const bigNumber2 = new BigNumber(n2);
 
       if (op == '+') {
-        resultado = Number(n1) + Number(n2);
+        resultado = bigNumber1.plus(bigNumber2);
       } else if (op == '-') {
-        resultado = Number(n1) - Number(n2);
+        resultado = bigNumber1.minus(bigNumber2);
       } else if (op == '*') {
-        resultado = Number(n1) * Number(n2);
+        resultado = bigNumber1.multipliedBy(bigNumber2);
       } else if (op == '/') {
-        resultado = Number(n1) / Number(n2);
+        resultado = bigNumber1.dividedBy(bigNumber2);
       } else {
-        resultado = Number(n1) ** Number(n2);
+        resultado = bigNumber1.pow(bigNumber2);
       }
 
       setVisor( resultado.toString() );
@@ -120,7 +124,7 @@ export default function Index(): JSX.Element {
     <View style={ styles.container }>
       <StatusBar hidden />
       <View style={ [ styles.display, { width: largura - 20 } ] }>
-        <Text style={ styles.texto }>{visor}</Text>
+        <Text style={ styles.texto } numberOfLines={1} ellipsizeMode="middle">{visor}</Text>
       </View>
       <View style={{ width: largura, height: altura }}>
         <View style={{ height: altura/5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
